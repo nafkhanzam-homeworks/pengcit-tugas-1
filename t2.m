@@ -1,4 +1,4 @@
-number_of_images = 6;
+number_of_images = 4;
 
 images = arrayfun( ...
     @(x) imread(append("res/1/",num2str(x),".jpg")), ...
@@ -8,6 +8,7 @@ images = arrayfun( ...
 );
 
 for i = 1:number_of_images
+    disp(i);
     im = images{i};
     figure();
     myhist(im);

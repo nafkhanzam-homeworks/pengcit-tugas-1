@@ -23,8 +23,4 @@ function myhist(img)
     p = get(hAx2, 'Position');
     set(hAx2, 'Position', [p(1:3) 26])
     set(hAx2, 'Units', 'normalized')
-
-    %# link x-limits of the two axes
-    linkaxes([hAx;hAx2], 'x')
-    set(gcf, 'CurrentAxes', hAx)
 end
