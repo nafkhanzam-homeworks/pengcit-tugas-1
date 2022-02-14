@@ -63,7 +63,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = gui_OutputFcn(hObject, eventdata, handles) 
+function varargout = gui_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -188,6 +188,24 @@ guidata(hObject, handles);
 
 % --- Executes on button press in apply_btn.
 function apply_btn_Callback(hObject, eventdata, handles)
+    im = imread(get(handles.upload_path, 'String'));
+    if (get(handles.radiobutton1, 'Value') == 1)
+        figure;myhist(im);
+    elseif (get(handles.radiobutton2, 'Value') == 1)
+        enhanced_im = enhance_contrast(im);
+        figure;myhist(im);
+        figure;imshow(im);
+        figure;myhist(enhanced_im);
+        figure;imshow(enhanced_im);
+    elseif (get(handles.radiobutton3, 'Value') == 1)
+        histeq_im = myhisteq(im);
+        figure;myhist(im);
+        figure;imshow(im);
+        figure;myhist(histeq_im);
+        figure;imshow(histeq_im);
+    elseif (get(handles.radiobutton4, 'Value') == 1)
+
+    end
 % hObject    handle to apply_btn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
