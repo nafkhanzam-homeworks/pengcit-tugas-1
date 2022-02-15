@@ -3,11 +3,11 @@ function result = myhisteq(im)
     fmap = freq_map(result);
     sarr = sum_array(fmap);
     [row, col, rgb] = size(result);
-    n = double(numel(result));
+    n = double(sarr(length(sarr)));
     for i=1:1:row
         for j=1:1:col
             for k=1:1:rgb
-                result(i, j, k) = round(sarr(result(i, j, k)+1)*256/n);
+                result(i, j, k) = round(255*sarr(result(i, j, k) + 1)/n);
             end
         end
     end
@@ -15,7 +15,7 @@ function result = myhisteq(im)
 end
 
 function m = freq_map(im)
-    m = zeros(256);
+    m = zeros(1, 256);
     [row, col, rgb] = size(im);
     for i=1:1:row
         for j=1:1:col
