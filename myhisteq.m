@@ -15,7 +15,7 @@ function result = myhisteq(im)
 end
 
 function m = freq_map(im)
-    m = zeros(256);
+    m = zeros(1, 256);
     [row, col, rgb] = size(im);
     for i=1:1:row
         for j=1:1:col
