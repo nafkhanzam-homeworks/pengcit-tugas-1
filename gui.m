@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 14-Feb-2022 18:57:20
+% Last Modified by GUIDE v2.5 16-Feb-2022 00:33:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -132,7 +132,15 @@ set(handles.radiobutton1, 'Value', 1);
 set(handles.radiobutton2, 'Value', 0);
 set(handles.radiobutton3, 'Value', 0);
 set(handles.radiobutton4, 'Value', 0);
+set(handles.upload_target_btn, 'Visible', 'off');
+axesHandlesToChildObjects = findobj(gca, 'Type', 'image');
+if ~isempty(axesHandlesToChildObjects)
+  delete(axesHandlesToChildObjects);
+end
 set(handles.apply_btn, 'Visible', 'on');
+if (~isempty(handles.target_img))
+    set(handles.apply_btn, 'Visible', 'on');
+end
 
 guidata(hObject, handles);
 % Hint: get(hObject,'Value') returns toggle state of radiobutton1
@@ -148,8 +156,15 @@ set(handles.radiobutton1, 'Value', 0);
 set(handles.radiobutton2, 'Value', 1);
 set(handles.radiobutton3, 'Value', 0);
 set(handles.radiobutton4, 'Value', 0);
+set(handles.upload_target_btn, 'Visible', 'off');
+axesHandlesToChildObjects = findobj(gca, 'Type', 'image');
+if ~isempty(axesHandlesToChildObjects)
+  delete(axesHandlesToChildObjects);
+end
 set(handles.apply_btn, 'Visible', 'on');
-
+if (~isempty(handles.target_img))
+    set(handles.apply_btn, 'Visible', 'on');
+end
 guidata(hObject, handles);
 % Hint: get(hObject,'Value') returns toggle state of radiobutton2
 
@@ -164,8 +179,15 @@ set(handles.radiobutton1, 'Value', 0);
 set(handles.radiobutton2, 'Value', 0);
 set(handles.radiobutton3, 'Value', 1);
 set(handles.radiobutton4, 'Value', 0);
+set(handles.upload_target_btn, 'Visible', 'off');
+axesHandlesToChildObjects = findobj(gca, 'Type', 'image');
+if ~isempty(axesHandlesToChildObjects)
+  delete(axesHandlesToChildObjects);
+end
 set(handles.apply_btn, 'Visible', 'on');
-
+if (~isempty(handles.target_img))
+    set(handles.apply_btn, 'Visible', 'on');
+end
 guidata(hObject, handles);
 % Hint: get(hObject,'Value') returns toggle state of radiobutton3
 
@@ -180,9 +202,14 @@ set(handles.radiobutton1, 'Value', 0);
 set(handles.radiobutton2, 'Value', 0);
 set(handles.radiobutton3, 'Value', 0);
 set(handles.radiobutton4, 'Value', 1);
-set(handles.apply_btn, 'Visible', 'on');
+set(handles.upload_target_btn, 'Visible', 'on');
 
 guidata(hObject, handles);
+if (~isempty(get(handles.target_img, 'children')))
+    set(handles.apply_btn, 'Visible', 'on');
+else
+    set(handles.apply_btn, 'Visible', 'off');
+end
 % Hint: get(hObject,'Value') returns toggle state of radiobutton4
 
 
@@ -193,18 +220,17 @@ function apply_btn_Callback(hObject, eventdata, handles)
         figure;myhist(im);
     elseif (get(handles.radiobutton2, 'Value') == 1)
         enhanced_im = enhance_contrast(im);
-        figure;myhist(im);
-        figure;imshow(im);
         figure;myhist(enhanced_im);
         figure;imshow(enhanced_im);
     elseif (get(handles.radiobutton3, 'Value') == 1)
         histeq_im = myhisteq(im);
-        figure;myhist(im);
-        figure;imshow(im);
         figure;myhist(histeq_im);
         figure;imshow(histeq_im);
     elseif (get(handles.radiobutton4, 'Value') == 1)
-
+        target = imread(handles.target_path);
+        histspec_im = myhistspec(im, target);
+        figure;myhist(histspec_im);
+        figure;imshow(histspec_im);
     end
 % hObject    handle to apply_btn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -239,3 +265,22 @@ function img_size_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in upload_target_btn.
+function upload_target_btn_Callback(hObject, eventdata, handles)
+% hObject    handle to upload_target_btn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[rawName, rawPath] = uigetfile(["*.jpg"; "*.jpeg"; "*.png"], "Select Target Image");
+fullName = [rawPath rawName];
+
+im = imread(fullName);
+handles.target_path = fullName;
+axes(handles.target_img);
+imshow(im);
+set(handles.target_img,'xtick',[],'ytick',[]);
+if (~isempty(get(handles.target_img, 'children')))
+    set(handles.apply_btn, 'Visible', 'on');
+end
+guidata(hObject, handles);
