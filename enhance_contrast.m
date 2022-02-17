@@ -1,7 +1,7 @@
-function result = enhance_contrast(im)
+function result = enhance_contrast(im, a, b)
     result = double(im);
-    rmin = get_rmin(result);
-    rmax = get_rmax(result);
+    rmin = get_rmin(result, uint8(a*255));
+    rmax = get_rmax(result, uint8(b*255));
     [row, col, rgb] = size(result);
     for i=1:1:row
         for j=1:1:col
@@ -14,34 +14,40 @@ function result = enhance_contrast(im)
 end
 
 function result = map_enhance(rval, rmin, rmax)
-    if (rval < rmin)
+    if (rval <= rmin)
         result = 0;
-    elseif (rval > rmax)
+    elseif (rval >= rmax)
         result = 255;
     else
         result = round((255*(rval-rmin))/(rmax-rmin));
     end
 end
 
-function result = get_rmin(im)
+function result = get_rmin(im, threshold)
     result = 255;
     [row, col, rgb] = size(im);
     for i=1:1:row
         for j=1:1:col
             for k=1:1:rgb
-                result = min(result, im(i, j, k));
+                curr = im(i, j, k);
+                if (curr > threshold)
+                    result = min(curr, result);
+                end
             end
         end
     end
 end
 
-function result = get_rmax(im)
+function result = get_rmax(im, threshold)
     result = 0;
     [row, col, rgb] = size(im);
     for i=1:1:row
         for j=1:1:col
             for k=1:1:rgb
-                result = max(result, im(i, j, k));
+                curr = im(i, j, k);
+                if (curr < threshold)
+                    result = max(curr, result);
+                end
             end
         end
     end

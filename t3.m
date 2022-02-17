@@ -2,7 +2,7 @@ number_of_images = 6;
 
 images = collect_images(3, number_of_images);
 
-for i = 4:4
+for i = 2:2
     im = images{i};
     histeq_im = myhisteq(im);
     figure;myhist(im);

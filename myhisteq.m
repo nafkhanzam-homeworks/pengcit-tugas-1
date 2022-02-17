@@ -7,7 +7,7 @@ function result = myhisteq(im)
     for i=1:1:row
         for j=1:1:col
             for k=1:1:rgb
-                result(i, j, k) = round(255*sarr(result(i, j, k) + 1)/n);
+                result(i, j, k) = floor(255*sarr(result(i, j, k) + 1)/n);
             end
         end
     end

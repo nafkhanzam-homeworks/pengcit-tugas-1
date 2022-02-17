@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 16-Feb-2022 00:33:11
+% Last Modified by GUIDE v2.5 18-Feb-2022 02:12:41
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,6 +51,16 @@ function gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to gui (see VARARGIN)
+
+
+fun = @(~,e)set(handles.text7,'String', append('a: ', num2str(e.AffectedObject.Value,3)));
+addlistener(handles.slider1, 'Value', 'PostSet',fun);
+set(handles.text7, 'Visible', 'off');
+set(handles.slider1, 'Visible', 'off');
+fun = @(~,e)set(handles.text8,'String', append('b: ', num2str(e.AffectedObject.Value,3)));
+addlistener(handles.slider2, 'Value', 'PostSet',fun);
+set(handles.text8, 'Visible', 'off');
+set(handles.slider2, 'Visible', 'off');
 
 % Choose default command line output for gui
 handles.output = hObject;
@@ -132,6 +142,10 @@ set(handles.radiobutton1, 'Value', 1);
 set(handles.radiobutton2, 'Value', 0);
 set(handles.radiobutton3, 'Value', 0);
 set(handles.radiobutton4, 'Value', 0);
+set(handles.text7, 'Visible', 'off');
+set(handles.slider1, 'Visible', 'off');
+set(handles.text8, 'Visible', 'off');
+set(handles.slider2, 'Visible', 'off');
 set(handles.upload_target_btn, 'Visible', 'off');
 axesHandlesToChildObjects = findobj(gca, 'Type', 'image');
 if ~isempty(axesHandlesToChildObjects)
@@ -156,6 +170,10 @@ set(handles.radiobutton1, 'Value', 0);
 set(handles.radiobutton2, 'Value', 1);
 set(handles.radiobutton3, 'Value', 0);
 set(handles.radiobutton4, 'Value', 0);
+set(handles.text7, 'Visible', 'on');
+set(handles.slider1, 'Visible', 'on');
+set(handles.text8, 'Visible', 'on');
+set(handles.slider2, 'Visible', 'on');
 set(handles.upload_target_btn, 'Visible', 'off');
 axesHandlesToChildObjects = findobj(gca, 'Type', 'image');
 if ~isempty(axesHandlesToChildObjects)
@@ -179,6 +197,10 @@ set(handles.radiobutton1, 'Value', 0);
 set(handles.radiobutton2, 'Value', 0);
 set(handles.radiobutton3, 'Value', 1);
 set(handles.radiobutton4, 'Value', 0);
+set(handles.text7, 'Visible', 'off');
+set(handles.slider1, 'Visible', 'off');
+set(handles.text8, 'Visible', 'off');
+set(handles.slider2, 'Visible', 'off');
 set(handles.upload_target_btn, 'Visible', 'off');
 axesHandlesToChildObjects = findobj(gca, 'Type', 'image');
 if ~isempty(axesHandlesToChildObjects)
@@ -202,6 +224,10 @@ set(handles.radiobutton1, 'Value', 0);
 set(handles.radiobutton2, 'Value', 0);
 set(handles.radiobutton3, 'Value', 0);
 set(handles.radiobutton4, 'Value', 1);
+set(handles.text7, 'Visible', 'off');
+set(handles.slider1, 'Visible', 'off');
+set(handles.text8, 'Visible', 'off');
+set(handles.slider2, 'Visible', 'off');
 set(handles.upload_target_btn, 'Visible', 'on');
 
 guidata(hObject, handles);
@@ -218,17 +244,28 @@ function apply_btn_Callback(hObject, eventdata, handles)
     im = imread(get(handles.upload_path, 'String'));
     if (get(handles.radiobutton1, 'Value') == 1)
         figure;myhist(im);
+        figure;imshow(im);
     elseif (get(handles.radiobutton2, 'Value') == 1)
-        enhanced_im = enhance_contrast(im);
+        a = get(handles.slider1, 'Value');
+        b = get(handles.slider2, 'Value');
+        enhanced_im = enhance_contrast(im, a, b);
+        figure;myhist(im);
+        figure;imshow(im);
         figure;myhist(enhanced_im);
         figure;imshow(enhanced_im);
     elseif (get(handles.radiobutton3, 'Value') == 1)
         histeq_im = myhisteq(im);
+        figure;myhist(im);
+        figure;imshow(im);
         figure;myhist(histeq_im);
         figure;imshow(histeq_im);
     elseif (get(handles.radiobutton4, 'Value') == 1)
         target = imread(handles.target_path);
         histspec_im = myhistspec(im, target);
+        figure;myhist(im);
+        figure;imshow(im);
+        figure;myhist(target);
+        figure;imshow(target);
         figure;myhist(histspec_im);
         figure;imshow(histspec_im);
     end
@@ -284,3 +321,44 @@ if (~isempty(get(handles.target_img, 'children')))
     set(handles.apply_btn, 'Visible', 'on');
 end
 guidata(hObject, handles);
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+
+
+% --- Executes on slider movement.
+function slider2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
