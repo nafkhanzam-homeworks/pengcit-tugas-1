@@ -23,7 +23,7 @@ function histspec = myhistspec(inputImg, targetImg)
         end
         invArr(i) = minIdx;
     end
-    disp(input(240, 287, 3))
+
     for m = 1:rowI
         for n = 1:columnI
             for k = 1:rgbI
