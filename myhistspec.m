@@ -3,13 +3,13 @@ function histspec = myhistspec(inputImg, targetImg)
     [rowI, columnI, rgbI] = size(input);
     histInput = myhisteq(input);
     sEq = histInput;
-    sArr = double(sum_array(freq_map(sEq))) * 256 / (rowI * columnI * rgbI);
+    sArr = floor(sum_array(hist(sEq(:), 0:255) / (rowI * columnI * rgbI)) * 255);
     
     target = targetImg;
     [rowT, columnT, rgbT] = size(target);
     histTarget = myhisteq(target);
     vEq = histTarget;
-    vArr = double(sum_array(freq_map(vEq))) * 256 / (rowT * columnT * rgbT);
+    vArr = floor(sum_array(hist(vEq(:), 0:255) / (rowT * columnT * rgbT)) * 255);
 
     invArr = zeros(1, 256);
     for i = 1:256
@@ -18,16 +18,16 @@ function histspec = myhistspec(inputImg, targetImg)
         for j = 2:256
             if (minVal > abs(sArr(i) - vArr(j)))
                 minVal = abs(sArr(i) - vArr(j));
-                minIdx = j;
+                minIdx = j - 1;
             end
         end
         invArr(i) = minIdx;
     end
-    
+    disp(input(240, 287, 3))
     for m = 1:rowI
         for n = 1:columnI
             for k = 1:rgbI
-                input(m, n, k) = invArr(input(m, n, k));
+                input(m, n, k) = invArr(input(m, n, k) + 1);
             end
         end
     end
